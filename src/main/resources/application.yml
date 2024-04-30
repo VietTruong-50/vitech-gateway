@@ -22,15 +22,13 @@ spring:
             - Path=/v1/shopping/**
           filters:
             - RewritePath=/v1/shopping/(?<path>.*), /$\{path}
-      #        - id: order-service
-      #          uri: http://localhost:9003/
-      #          predicates:
-      #            - Path=/api/v1/order/**
+        - id: order-service
+          uri: http://localhost:9003/order-service
+          predicates:
+            - Path=/v1/order/**
+          filters:
+            - RewritePath=/v1/order/(?<path>.*), /$\{path}
 
-      #        - id: inventory-service
-      #          uri: http://localhost:9004/
-      #          predicates:
-      #            - Path=/api/v1/inventory/**
       default-filters:
         - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
       global-cors:
