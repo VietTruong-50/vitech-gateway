@@ -4,6 +4,8 @@ spring:
   application:
     name: api-gateway
   cloud:
+    loadbalancer:
+      enabled: true
     gateway:
       discovery:
         locator:
@@ -11,19 +13,19 @@ spring:
           lowerCaseServiceId: true
       routes:
         - id: management-service
-          uri: http://localhost:9002/management-service
+          uri: lb://management-service
           predicates:
             - Path=/v1/management/**
           filters:
             - RewritePath=/v1/management/(?<path>.*), /$\{path}
         - id: shopping-service
-          uri: http://localhost:9001/shopping-service
+          uri: lb://shopping-service
           predicates:
             - Path=/v1/shopping/**
           filters:
             - RewritePath=/v1/shopping/(?<path>.*), /$\{path}
         - id: order-service
-          uri: http://localhost:9003/order-service
+          uri: lb://order-service
           predicates:
             - Path=/v1/order/**
           filters:
@@ -63,4 +65,4 @@ eureka:
   instance:
     ip-address: ${CLIENT_IP_ADDRESS:localhost}
     prefer-ip-address: ${PREFER_IP_ADDRESS:false}
-    hostname: ${HOSTNAME:gateway-service}
+    hostname: ${HOSTNAME:localhost}
