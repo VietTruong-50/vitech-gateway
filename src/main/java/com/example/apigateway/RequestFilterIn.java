@@ -7,6 +7,7 @@ import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.Ordered;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -21,7 +22,11 @@ public class RequestFilterIn implements GlobalFilter, Ordered, ApplicationContex
         //Do something in future
 
         // Continue the filter chain
-        return chain.filter(exchange);
+        return chain.filter(exchange).then(Mono.fromRunnable(() -> {
+            ServerHttpResponse response = exchange.getResponse();
+            log.info("Response: {}", response);
+            log.info("Response Header: {}", response.getHeaders());
+        }));
     }
 
     @Override
